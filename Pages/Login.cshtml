@@ -1,0 +1,19 @@
+﻿@page
+@model project1.Pages.LoginModel
+@{
+
+
+
+	<form method ="post"> 
+		<label>Email: </label>
+		<input asp-for ="GivenUser.Email"/>
+
+		<label>Password: </label>
+		<input asp-for = "GivenUser.Password"/>
+
+		<button asp-page-handler ="UserAuthentication">Login</button>
+		<button>Change Password</button>
+		<button>Forgot Password</button>
+	</form>
+}
+<link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />

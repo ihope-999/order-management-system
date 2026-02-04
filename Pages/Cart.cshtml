@@ -1,0 +1,49 @@
+﻿@page
+@model project1.Pages.CartModel
+@{
+	<h1>Ordered Status: @Model.Cart.Status.isOrdered</h1>
+	if(!Model.Cart.Status.isOrdered)
+	
+	@foreach(var cartItem in Model.Cart.Items){
+
+						<div style="
+					border: 1px solid #ccc;
+					border-radius: 10px;
+					padding: 15px;
+					box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
+					background-color: #1e1e1e;
+					flex: 0 0 calc(25% - 15px); /* 4 cards per row with gap */
+					box-sizing: border-box;
+							">
+								<p>FoodName: @cartItem.FoodName</p>
+								<p>FoodPrice: @cartItem.FoodPrice$</p>
+								<p>Time to make: @cartItem.FoodTimeToMake minute(s)</p>
+								<p>Expected delivery: In @cartItem.FoodTimeToMakeTheDelivery minute(s)</p>
+								<p>Count of item to buy: @cartItem.CountOfItem</p>
+
+
+
+
+															<form method ="post">	
+															<button asp-route-id ="@cartItem.FoodId" asp-page-handler ="DecreaseFoodCountByOne" type="submit">-</button>
+															<input  id = "@cartItem.FoodId" asp-route-id = "@cartItem.FoodId" asp-for = "FoodQuantity" asp-page-handler ="IncreaseFoodCount"type="number" value = "@cartItem.CountOfItem" min="0" step="1" />
+															<button asp-route-id = "@cartItem.FoodId" asp-page-handler = "IncreaseFoodCountByOne" type="submit">+</button>
+
+															 </form>
+
+										<form method ="post">
+											<button type ="submit" asp-page-handler ="DeleteFromTheCart" asp-route-id = "@cartItem.FoodId">Delete</button>
+
+										</form>
+
+							</div>
+		}
+				<form method ="post">
+					<button asp-page-handler = "GoToCheckOut">Go To Checkout </button> 
+				</form>
+
+	}
+
+
+		
+				

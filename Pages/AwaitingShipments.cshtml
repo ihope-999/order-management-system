@@ -1,0 +1,17 @@
+﻿@page
+@model project1.Pages.AwaitingShipmentsModel
+@{
+	<h1>These items are waiting for your approval to be shipped:</h1>
+	<h1>THE COUNT: @Model.cartItemsWaiting.Count()</h1>
+	@foreach(var item in Model.cartItemsWaiting){
+		<h1>-----------------------------------------</h1>
+
+		<p1>The item name: @item.FoodName</p1>
+		<p1>The count of item: @item.CountOfItem</p1>
+		<p1>The address of delivery: </p1>
+		<form method ="post">
+		<button asp-route-id ="@item.FoodId" name ="cartId" value ="@item.CartId"  type="submit" asp-page-handler="ItemGivenToTheCargo">The item has been given to the cargo</button>
+		
+		</form>
+	}
+}

@@ -1,0 +1,11 @@
+﻿@page
+@model project1.Pages.LogoutModel
+@{
+
+	@if(User.Identity.IsAuthenticated){
+		<h4>@User.Identity.Name is logged out!</h4>
+	}
+	else{
+		<h4>You are not loggeed in!</h4>
+	}
+}

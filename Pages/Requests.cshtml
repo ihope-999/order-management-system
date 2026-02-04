@@ -1,0 +1,15 @@
+﻿@page
+@model project1.Pages.RequestsModel
+@{
+	if(User.IsInRole("Admin")){
+		@foreach(var requestUser in Model.RequestUsers){
+			<p1>Username: @requestUser.RealUserName</p1>
+			<p1>Real Name(First Name ): @requestUser.FirstName</p1>
+			<p1>Wants to be a @requestUser.RoleRequest</p1>
+			<form method ="post">
+			<button type ="submit" asp-route-id = "@requestUser.Id", asp-page-handler = "GiveRole">Give permission</button>
+			</form>
+		}
+	}
+}
+

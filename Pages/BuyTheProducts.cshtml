@@ -1,0 +1,41 @@
+﻿@page
+@model project1.Pages.BuyTheProductsModel
+@{
+
+
+	<form method ="post">
+
+		<label>Enter your Credit Card Number: </label>
+		<input asp-for="PaymentInfo.CreditCardInfo" />
+
+		<label>Select your Payment Processor: </label>
+		<input asp-for ="PaymentInfo.PaymentProcessor"/>
+
+		<label>Tell us your Shipping Address: </label>
+		<input asp-for ="PaymentInfo.ShippingAddress"/>
+		<button type ="submit" asp-page-handler ="BuyTheProducts">Buy the products</button>
+
+		<label>Or do you want to use one of your saved Payment informations?</label>
+		<button type ="submit" asp-page-handler ="ShowPaymentInformations">Show Saved Payment Information</button>
+		<div style="payment-info-section">
+
+			@if (Model.showSavedPaymentInfo)
+			{
+
+				@foreach (var paymentinfo in Model.myUser.PaymentInfo)
+				{
+								<h1>--------------PAYMENT INFO --------------</h1>
+								<button type ="checkbox" asp-for ="specifiedNumber"  asp-page-handler = "BuyTheProductsWithSavedInformation">Use this Payment Info @paymentinfo.paymentInfoId</button>
+								<p1>Your Payment Processor: @paymentinfo.PaymentProcessor</p1>
+								<p1>Your Credit Card Info: @paymentinfo.CreditCardInfo</p1>
+								<p1>Your Saved Address(es): @paymentinfo.ShippingAddress</p1>
+				}
+			}
+	</form>
+	
+
+
+
+	
+}
+<link rel="stylesheet" href="~/css/buytheproducts.css" asp-append-version="true" />

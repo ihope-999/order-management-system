@@ -1,0 +1,34 @@
+﻿@page
+@model project1.Pages.CheckoutModel
+@{
+
+		<div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: flex-start;">
+		@foreach (var cartItem in @Model.Cart.Items)
+		{
+						<div style="
+					border: 1px solid #ccc;
+					border-radius: 10px;
+					padding: 15px;
+					box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
+						background-color: #1e1e1e;
+					flex: 0 0 calc(25% - 15px); /* 4 cards per row with gap */
+					box-sizing: border-box;
+						">
+									<p>FoodName: @cartItem.FoodName</p>
+									<p>FoodPrice: @cartItem.FoodPrice$</p>
+									<p>Food Amount: @cartItem.CountOfItem</p>
+
+						</div>
+
+
+		}
+
+		</div>
+
+		
+		<h2>Total Price of the products: @Model.TotalPrice$</h2>
+		<form method = "post">
+				<button asp-page-handler ="BuyTheProducts"type ="submit">Buy</button>
+		</form>
+}
+

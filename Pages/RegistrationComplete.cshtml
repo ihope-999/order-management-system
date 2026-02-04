@@ -1,0 +1,9 @@
+﻿@page
+@model project1.Pages.RegistrationCompleteModel
+@{
+	<label>Enter the registration code sent to your email: </label>
+	<form method ="post">
+		<input asp-for = "@Model.givenToken"/>
+		<button type ="submit" asp-page-handler = "RegistrationComplete">Complete</button></form>
+	
+}

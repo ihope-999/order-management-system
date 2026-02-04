@@ -1,0 +1,20 @@
+﻿@page
+@model project1.Pages.RequestToAdminModel
+@{
+
+
+	<h1>Do you want to become a Courier?</h1>
+	<form method ="post">
+	<button type="submit" name = "role"  role ="Courier" -page-handler ="RoleAssignmentRequest">Request for the role of Courier</button>
+	</form>
+	<h1>Do you want to become an Administrator?</h1>
+	<form method ="post">
+	<button type = "submit" name = "role" value ="Admin"  asp-page-handler ="RoleAssignmentRequest">Request for the role of Admin</button>
+	</form>
+	<form method ="post">
+	<h1>Do you want to become a Seller?</h1>
+	<button type = "submit" name = "role" value ="Seller"  asp-page-handler ="RoleAssignmentRequest">Request for the role of Seller</button>
+	</form>
+
+
+}

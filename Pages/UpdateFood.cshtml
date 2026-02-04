@@ -1,0 +1,45 @@
+﻿@page
+@model project1.Pages.UpdateFoodModel
+@{
+
+		<div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: flex-start;">
+		
+			<div style="
+					border: 1px solid #ccc;
+					border-radius: 10px;
+					padding: 15px;
+					box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
+					background-color: #f9f9f9;
+					flex: 0 0 calc(25% - 15px); /* 4 cards per row with gap */
+					box-sizing: border-box;
+						">
+
+			<form method ="post">
+				
+			
+				<input type="hidden" asp-for="updateFood.FoodId" />
+
+				<label>Name: </label>
+						<input asp-for ="@Model.updateFood.FoodName" />
+						<label>Price: </label>
+						<input asp-for = "@Model.updateFood.FoodPrice" />
+						<label>Time to Make: </label>
+						<input asp-for = "@Model.updateFood.FoodTimeToMake"/>
+						<label>Deliverer: </label>
+						<input asp-for ="@Model.updateFood.FoodDeliverer"/>
+						<label>Delivery Address: </label>
+						<input asp-for ="@Model.updateFood.FoodDeliveryAddress"/>
+						<label>Time to Make the Delivery: </label>
+						<input asp-for = "@Model.updateFood.FoodTimeToMakeTheDelivery"/>
+
+
+							<button asp-page-handler = "UpdateHandler">Update</button>
+			</form>
+					
+								
+				</div>
+	
+		</div>
+}
+
+		

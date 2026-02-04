@@ -1,0 +1,34 @@
+﻿@page
+@model project1.Pages.CheckOrderedItemsModel
+@{
+	
+		<div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: flex-start;">
+
+		
+		@foreach (var cart in Model.Carts)
+		@foreach(var cartItem in cart.Items)
+		{
+						<div style="
+					border: 1px solid #ccc;
+					border-radius: 10px;
+					padding: 15px;
+					box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
+						background-color: #1e1e1e;
+					flex: 0 0 calc(25% - 15px); /* 4 cards per row with gap */
+					box-sizing: border-box;
+						">
+									<p>FoodId: @cartItem.FoodId</p>
+									<p>FoodName: @cartItem.FoodName</p>
+									<p>FoodPrice: @cartItem.FoodPrice</p>
+									<p>Time to make: @cartItem.FoodTimeToMake</p>
+									<p>Deliverer: @cartItem.FoodDeliverer</p>
+									<p>Delivery Address: @cartItem.FoodDeliveryAddress</p>
+									<p>Time to make the delivery: @cartItem.FoodTimeToMakeTheDelivery</p>
+									<p>Status of acceptance: @(cart.Status.IsAcceptedByTheDelivery ? "The delivery accepted your order" : "Still waiting for the delivery to accept your order")</p>
+									<p>Status of payment: @(cart.Status.IsPaid ? "Paid" : "Not Paid")</p>
+								
+				
+						</div>
+		}
+		</div>
+}

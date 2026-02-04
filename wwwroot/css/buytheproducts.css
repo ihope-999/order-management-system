@@ -1,0 +1,176 @@
+﻿/* buytheproducts.css */
+
+/* Reset conflicting styles from site.css */
+form {
+    all: unset;
+    display: block;
+}
+
+/* Page styling with dark theme */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #121212; /* Pure dark grey */
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    color: #e0e0e0;
+}
+
+/* Elegant form container */
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #1e1e1e; /* Dark grey container */
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    border: 1px solid #2d2d2d;
+}
+
+/* Labels */
+label {
+    display: block;
+    margin: 20px 0 8px;
+    font-weight: 500;
+    color: #cccccc;
+    font-size: 14px;
+    letter-spacing: 0.3px;
+}
+
+/* Input fields */
+input[type="text"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #404040;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s;
+    background: #262626;
+    box-sizing: border-box;
+    color: #f0f0f0;
+    outline: none;
+}
+
+    input[type="text"]:focus {
+        border-color: #0d47a1; /* Dark blue for focus */
+        box-shadow: 0 0 0 2px rgba(13, 71, 161, 0.2);
+    }
+
+/* Main action button */
+button[type="submit"] {
+    display: inline-block;
+    padding: 12px 24px;
+    margin: 24px 8px 8px 0;
+    background-color: #0d47a1; /* Dark blue */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+    button[type="submit"]:hover {
+        background-color: #1565c0; /* Slightly lighter blue on hover */
+        transform: translateY(-1px);
+    }
+
+    /* Show payment info button */
+    button[type="submit"][asp-page-handler="ShowPaymentInformations"] {
+        background-color: transparent;
+        border: 1px solid #404040;
+        color: #a0a0a0;
+        padding: 10px 20px;
+    }
+
+        button[type="submit"][asp-page-handler="ShowPaymentInformations"]:hover {
+            background-color: #2a2a2a;
+            border-color: #505050;
+        }
+
+/* Payment info section */
+div[style*="payment-info-section"] {
+    margin: 32px 0;
+    padding: 24px;
+    background: #1e1e1e;
+    border-radius: 8px;
+    border: 1px solid #2d2d2d;
+}
+
+    div[style*="payment-info-section"] label {
+        color: #d0d0d0;
+        font-size: 15px;
+        margin-bottom: 12px;
+    }
+
+/* Payment info display */
+h1 {
+    text-align: center;
+    color: #888888;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 20px 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+p1 {
+    display: block;
+    margin: 8px 0;
+    padding: 12px 16px;
+    background: #262626;
+    border-radius: 6px;
+    color: #cccccc;
+    font-size: 13px;
+    border-left: 3px solid #0d47a1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        padding: 16px;
+    }
+
+    form {
+        padding: 24px;
+        margin: 0;
+    }
+
+    button[type="submit"] {
+        width: 100%;
+        margin: 16px 0;
+    }
+}
+
+/* Ensure clean layout */
+br {
+    display: none;
+}
+
+/* Add subtle hover effect to payment info cards */
+p1:hover {
+    background: #2a2a2a;
+}
+
+/* Remove any default button styles that might be inherited */
+button {
+    font-family: inherit;
+    outline: none;
+}
+
+/* Simple focus state */
+*:focus {
+    outline: 2px solid #0d47a1;
+    outline-offset: 2px;
+}
+
+/* Add some spacing improvements */
+form > * {
+    margin-bottom: 8px;
+}
+
+/* Make the form more compact but still elegant */
+form {
+    padding: 28px 32px;
+}

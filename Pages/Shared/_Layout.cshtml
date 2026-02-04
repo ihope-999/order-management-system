@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - project1</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/project1.styles.css" asp-append-version="true" />
+
+    <!-- Load foods.css only on Foods page -->
+    @if (ViewContext.RouteData.Values["Page"]?.ToString() == "/Foods")
+    {
+            <link rel="stylesheet" href="~/css/foods.css" asp-append-version="true" />
+    }
+
+</head>
+<body>
+    <!-- NAVBAR WITH WHITE LINE -->
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark border-bottom">
+            <div class="container-fluid px-4">
+
+                <!-- LEFT LINKS -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" asp-page="/Index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-page="/Privacy">Privacy</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-page="/Foods">Foods</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-page="/Cart">Cart</a></li>
+
+                </ul>
+
+                <!-- RIGHT LINKS -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" asp-page="/Register">Register</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-page="/CheckOrderedItems">Your Orders</a></li>
+                    @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
+                    {
+                       <li class="nav-item"><a class="nav-link" asp-page="/RequestForRole">Role Requests</a></li>
+
+                    }
+                           <li class="nav-item"><a class="nav-link" asp-page="/AwaitingShipments">Shipments(Sellers)</a></li>
+
+                    
+                    @if(User.Identity.IsAuthenticated)
+                    {
+                         <li class="nav-item"><a class="nav-link" asp-page="/UserProfile">My Account</a></li>
+
+                          <li class="nav-item"><a class="nav-link" asp-page="/Logout">Logout</a></li>
+
+
+                    }
+                    @if(!User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-page="/Login">Login</a></li>
+
+                    }
+                    @if(User.IsInRole("Admin")){
+                        <li class="nav-item"><a class="nav-link" asp-page="/Requests">Role Requests(Admin)</a></li>
+
+                    }
+                </ul>
+
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="container-fluid py-3">
+        @RenderBody()
+    </main>
+
+
+    <style>
+    /* FORCE FOOTER TO BOTTOM */
+    html, body {
+        height: 100%;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .container-fluid.py-3 {
+        flex: 1;
+    }
+
+    .footer {
+        margin-top: auto;
+    }
+</style>
+    <!-- FOOTER WITH WHITE LINE -->
+ <!-- FOOTER - SIMPLE FIX -->
+<footer class="footer border-top fixed-bottom">
+    <div class="container-fluid text-center py-3">
+        &copy; 2025 - project1 - <a asp-page="/Privacy">Privacy</a>
+    </div>
+
+
+</footer>
+
+    <!-- SCRIPTS -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+

@@ -1,0 +1,24 @@
+﻿@page
+@model project1.Pages.RequestForCourierSellerRoleModel
+@{
+
+		@if(Model.role == "Courier"){
+				<h1>You are applying for @Model.role</h1>
+				<h1>Please enter the necessary information below and send it to us.</h1>
+				<input type ="text" placeholder="Introduce yourself to us and please attach your CV" />
+				<form method ="post">
+				<button type = "submit" name = "role" value ="Admin"  asp-page-handler ="CourierRoleAssignmentRequest">Send</button>
+				</form>
+		}
+
+	@if (Model.role == "Seller")
+	{
+		<h1>You are applying for @Model.role</h1>
+		<h1>Please enter the necessary information below and send it to us.</h1>
+		<input type ="text" placeholder="Introduce yourself to us and please attach your CV" />
+		<form method ="post">
+		<button type = "submit" name = "role" value ="Admin"  asp-page-handler ="SellerRoleAssignmentRequest">Send</button>
+		</form>
+	}
+		
+}

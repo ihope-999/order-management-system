@@ -1,0 +1,21 @@
+﻿@page
+@model project1.Pages.RegisterModel
+@{
+
+		
+		<form method ="post"> 
+			<label>setName: </label>
+			<input asp-for ="GivenUser.RealUserName" />
+
+			<label>Password: </label>
+			<input asp-for = "GivenUser.Password"/>
+
+			<label>Email: </label>
+			<input asp-for ="GivenUser.Email"/>
+
+			<label>Telephone Number: </label>
+			<input asp-for = "GivenUser.TelNum"/>
+
+			<button asp-page-handler ="Register">Register</button>
+		</form>
+}

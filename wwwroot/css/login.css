@@ -1,0 +1,77 @@
+﻿/* ===== Scope everything to the login form only ===== */
+form {
+    background-color: #1e1e1e; /* dark card grey */
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto; /* center on page */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+    /* Labels inside the form only */
+    form label {
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #e0e0e0;
+    }
+
+    /* Inputs inside the form only */
+    form input {
+        padding: 10px 12px;
+        border-radius: 6px;
+        border: 1px solid #444444;
+        background-color: #121212;
+        color: #e0e0e0;
+        font-size: 14px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+        form input:focus {
+            outline: none;
+            border-color: #1a3a8a; /* dark blue on focus */
+            box-shadow: 0 0 5px #1a3a8a;
+        }
+
+    /* All buttons inside the form */
+    form button {
+        padding: 10px 15px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+        /* Main login button only */
+        form button[asp-page-handler="UserAuthentication"] {
+            background-color: #1a3a8a; /* dark blue */
+            color: #ffffff;
+        }
+
+            form button[asp-page-handler="UserAuthentication"]:hover {
+                background-color: #0f2a66; /* darker blue hover */
+                transform: translateY(-1px);
+            }
+
+        /* Secondary buttons (Change/Forgot Password) */
+        form button:not([asp-page-handler="UserAuthentication"]) {
+            background-color: #333333;
+            color: #e0e0e0;
+        }
+
+            form button:not([asp-page-handler="UserAuthentication"]):hover {
+                background-color: #444444;
+                transform: translateY(-1px);
+            }
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    form {
+        padding: 30px 20px;
+        margin: 30px 10px;
+    }
+}

@@ -1,0 +1,82 @@
+﻿@page
+@using Microsoft.AspNetCore.Http
+@model project1.Pages.UserProfileModel
+@{
+
+    if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+
+                <p1>Current user count in the site: @Model._dbContext.Users.Count()</p1>
+                <p1>Current item count in the site: @Model._dbContext.FoodItems.Count()</p1>
+    }
+
+	if(User.Identity.IsAuthenticated){
+        @foreach(var role in Model.roles){
+            <p1>The role is: @role </p1>
+        }
+		<p1>Username: @Model.user.RealUserName</p1>
+                <p1>Email: @Model.user.Email</p1>
+		<p1>Telephone Number: @Model.user.TelNum</p1>
+        
+        
+           <p1>Saved Payment Information</p1>
+          <h1>---------------------------------------------------------------------------------------------------------------------------------------</h1>
+        @foreach (var paymentinfo in Model.user.PaymentInfo)
+        {
+
+			<p1>Your Payment Processor: @paymentinfo.PaymentProcessor</p1>
+			<p1>Your Credit Card Info: @paymentinfo.CreditCardInfo</p1>
+			<p1>Your Saved Address(es): @paymentinfo.ShippingAddress</p1>
+           <h1>---------------------------------------------------------------------------------------------------------------------------------------</h1>
+		}
+		
+
+
+
+	}
+
+ 
+
+}
+    
+
+<style>
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #1e1e1e;
+    color: #333;
+}
+
+p1 {
+    display: block;
+    background: #ffffff;
+    padding: 10px 14px;
+    margin: 8px 0;
+    border-left: 4px solid #4a90e2;
+    border-radius: 4px;
+    font-size: 15px;
+}
+
+p1:nth-of-type(5) {
+    font-weight: bold;
+    background: #e9f2ff;
+    border-left-color: #2c6ed5;
+}
+
+p1 + p1 {
+    margin-top: 6px;
+}
+
+p1:nth-child(n+6) {
+    border-left-color: #7cb342;
+}
+
+     
+    p1 {
+        font-size: 14px;
+        padding: 8px 10px;
+    }
+
+
+</style>
