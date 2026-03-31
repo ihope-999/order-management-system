@@ -11,6 +11,7 @@ sellers, and couriers.
 - **Role application system** — users can apply for roles, admins approve requests
 - **Order management** — users can place and track the status of their orders
 - **Admin dashboard** — full control over users, roles, and orders
+- **Chat system** — ongoing
 
 ## Tech Stack
 
