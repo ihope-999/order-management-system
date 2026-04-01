@@ -1,26 +1,157 @@
 ﻿@page
 @model ErrorModel
-@{
-    ViewData["Title"] = "Error";
+
+<style>
+.error-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 200px);
+    padding: 2rem;
+    animation: fadeIn 0.5s ease-out;
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
-
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
+.error-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 3rem 2rem;
+    text-align: center;
+    max-width: 600px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to the <strong>Development</strong> environment displays detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+.error-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+}
+
+.error-code {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--accent-danger);
+    margin: 0 0 1rem 0;
+    line-height: 1;
+}
+
+.error-card h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.error-message {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.request-id {
+    background-color: var(--bg-tertiary);
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    margin: 1.5rem 0;
+    word-break: break-all;
+}
+
+.request-id-label {
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.request-id-value {
+    font-family: 'Courier New', monospace;
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+.error-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.error-actions a,
+.error-actions button {
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--transition-base);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-home {
+    background-color: var(--accent-primary);
+    color: white;
+}
+
+.btn-home:hover {
+    background-color: var(--accent-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+}
+
+.error-details {
+    background-color: var(--bg-tertiary);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    margin-top: 2rem;
+    text-align: left;
+    border-left: 4px solid var(--accent-warning);
+}
+
+.error-details h3 {
+    margin-top: 0;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-primary);
+}
+
+.error-details p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+}
+</style>
+
+<div class="error-container">
+    <div class="error-card">
+        <div class="error-icon">⚠️</div>
+        <h1 class="error-code">Error</h1>
+        <h2>Something Went Wrong</h2>
+        <p class="error-message">
+            An unexpected error occurred while processing your request. 
+            Our team has been notified and is working to resolve this issue.
+        </p>
+
+        @if (Model.ShowRequestId)
+        {
+            <div class="request-id">
+                <span class="request-id-label">Request ID:</span>
+                <div class="request-id-value">@Model.RequestId</div>
+            </div>
+        }
+
+        <div class="error-actions">
+            <a asp-page="/Index" class="btn-home">Return to Home</a>
+        </div>
+
+        <div class="error-details">
+            <h3>💡 What you can do:</h3>
+            <p>• Try refreshing the page</p>
+            <p>• Clear your browser cache and cookies</p>
+            <p>• Try again in a few moments</p>
+            <p>• Contact support if the problem persists</p>
+        </div>
+    </div>
+</div>
