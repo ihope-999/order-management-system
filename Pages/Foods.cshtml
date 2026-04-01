@@ -1,90 +1,336 @@
 ﻿@page
 @model project1.Pages.FoodsModel
-@{
 
-
-
-	<div style="
-		border: 1px solid #333;
-		border-radius: 10px;
-		padding: 15px;
-		box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
-		background-color: #1e1e1e;  <!-- CHANGED TO DARK GREY -->
-		flex: 0 0 calc(25% - 15px);
-		box-sizing: border-box;
-	">
-		@if(User.Identity.IsAuthenticated){
-			<h4>WELCOME @User.Identity.Name</h4>
-		}
-		else{
-			<h4>WELCOME Anonymous! </h4>
-		}
-
-		@if(User.IsInRole("Admin") || User.IsInRole("Seller"))
-		{
-			<form method = "post">
-				<label>FoodName: </label>
-				<input asp-for = "addedFoodItem.FoodName"type = "text" />
-
-				<label>FoodPrice: </label>
-				<input asp-for = "addedFoodItem.FoodPrice" type = "number" />
-
-				<label>FoodTimeToMake: </label>
-				<input asp-for = "addedFoodItem.FoodTimeToMake" type = "number" />
-
-				<label>Deliverer: </label>
-				<input asp-for = "addedFoodItem.FoodDeliverer" type = "text" />
-
-				<label>Delivery Address: </label>
-				<input asp-for = "addedFoodItem.FoodDeliveryAddress" type = "text" />
-
-				<label>FoodTimeToMakeTheDelivery </label>
-				<input asp-for = "addedFoodItem.FoodTimeToMakeTheDelivery" type = "number" />
-				<button type ="submit" asp-page-handler = "AddHandler">Add</button>
-
-			</form>
-
-		}
-
-
-
-
-	</div>
-
-
-
-	<div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: flex-start;">
-		@foreach (var Food in Model.FoodItems)
-		{
-			<div style="
-		border: 1px solid #333;
-		border-radius: 10px;
-		padding: 15px;
-		box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
-		background-color: #1e1e1e;  
-		flex: 0 0 calc(25% - 15px);
-		box-sizing: border-box;
-		">
-					<p>FoodName: @Food.FoodName</p>
-					<p>FoodPrice: @Food.FoodPrice$</p>
-					<p>Time to make: @Food.FoodTimeToMake minute(s)</p>
-					<p>Expected delivery: In @Food.FoodTimeToMakeTheDelivery minute(s)</p>
-					<a href="Details">Details</a>
-					<form method = "post">
-						
-					<button type = "submit" asp-page-handler ="AddToCartHandler" asp-route-id ="@Food.FoodId">Add to Cart</button>
-					@if (User.IsInRole("Admin") || Food.Seller == Model.user.Email)
-
-					{
-					<button type ="submit" name ="Username" value ="@User.Identity.Name"asp-page-handler = "DeleteHandler" asp-route-id = "@Food.FoodId">Delete</button>
-					<button type ="submit" name = "Username" value ="@User.Identity.Name" asp-page-handler ="UpdateHandler" asp-route-id = "@Food.FoodId">Update</button>
-
-					}
-					</form>
-				</div>
-		}
-	</div>
+<style>
+.foods-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    animation: slideInFromLeft 0.5s ease-out;
 }
+
+.foods-header h1 {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.food-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.form-section {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    animation: slideInFromRight 0.5s ease-out;
+}
+
+.form-section h3 {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.form-group input {
+    padding: 0.75rem 1rem;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    transition: all var(--transition-fast);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.add-button {
+    grid-column: 1 / -1;
+    padding: 0.875rem 1.5rem;
+    background-color: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.add-button:hover {
+    background-color: var(--accent-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.foods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.food-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.food-card:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.2);
+}
+
+.food-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 1rem;
+}
+
+.food-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.food-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+}
+
+.food-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.food-info p {
+    margin: 0;
+}
+
+.food-info strong {
+    color: var(--text-primary);
+}
+
+.food-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: auto;
+}
+
+.food-actions button,
+.food-actions a {
+    padding: 0.625rem 1rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.btn-add-cart {
+    background-color: var(--accent-primary);
+    color: white;
+}
+
+.btn-add-cart:hover {
+    background-color: var(--accent-primary-hover);
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    background-color: var(--accent-danger);
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color-light);
+}
+
+.btn-secondary:hover {
+    background-color: var(--bg-hover);
+}
+
+.welcome-section {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+    border: 1px solid var(--border-color);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 2rem;
+}
+
+.welcome-section h2 {
+    font-size: 1.5rem;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+@@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .foods-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .food-header {
+        flex-direction: column;
+    }
+
+    .foods-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .foods-header h1 {
+        font-size: 1.75rem;
+    }
+}
+</style>
+
+<div class="foods-header">
+    <h1>Browse Foods</h1>
+</div>
+
+<div class="welcome-section">
+    @if(User.Identity.IsAuthenticated)
+    {
+        <h2>Welcome, @User.Identity.Name! 👋</h2>
+    }
+    else
+    {
+        <h2>Welcome, Guest! 👋</h2>
+    }
+</div>
+
+@{
+    if(User.IsInRole("Admin") || User.IsInRole("Seller"))
+    {
+        <div class="form-section">
+            <h3>Add New Food Item</h3>
+            <form method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label asp-for="addedFoodItem.FoodName">Name</label>
+                        <input asp-for="addedFoodItem.FoodName" type="text" placeholder="Food name" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="addedFoodItem.FoodPrice">Price ($)</label>
+                        <input asp-for="addedFoodItem.FoodPrice" type="number" step="0.01" placeholder="Price" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="addedFoodItem.FoodTimeToMake">Preparation Time (min)</label>
+                        <input asp-for="addedFoodItem.FoodTimeToMake" type="number" placeholder="In minutes" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="addedFoodItem.FoodDeliverer">Deliverer Name</label>
+                        <input asp-for="addedFoodItem.FoodDeliverer" type="text" placeholder="Deliverer name" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="addedFoodItem.FoodDeliveryAddress">Delivery Address</label>
+                        <input asp-for="addedFoodItem.FoodDeliveryAddress" type="text" placeholder="Address" />
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="addedFoodItem.FoodTimeToMakeTheDelivery">Delivery Time (min)</label>
+                        <input asp-for="addedFoodItem.FoodTimeToMakeTheDelivery" type="number" placeholder="In minutes" />
+                    </div>
+
+                    <button type="submit" class="add-button" asp-page-handler="AddHandler">Add Food Item</button>
+                </div>
+            </form>
+        </div>
+    }
+}
+
+<h2 style="margin-top: 3rem; margin-bottom: 1.5rem;">Available Foods</h2>
+
+<div class="foods-grid">
+    @foreach (var Food in Model.FoodItems)
+    {
+        <div class="food-card">
+            <div class="food-header">
+                <h3 class="food-name">@Food.FoodName</h3>
+                <div class="food-price">$@Food.FoodPrice</div>
+            </div>
+
+            <div class="food-info">
+                <p><strong>Preparation:</strong> @Food.FoodTimeToMake minute(s)</p>
+                <p><strong>Delivery:</strong> ~@Food.FoodTimeToMakeTheDelivery minute(s)</p>
+                <p><strong>Delivered by:</strong> @Food.FoodDeliverer</p>
+                <p><strong>Location:</strong> @Food.FoodDeliveryAddress</p>
+            </div>
+
+            <div class="food-actions">
+                <form method="post" style="margin: 0;">
+                    <button type="submit" class="btn-add-cart" asp-page-handler="AddToCartHandler" asp-route-id="@Food.FoodId">Add to Cart</button>
+
+                    @if (User.IsInRole("Admin") || Food.Seller == Model.user.Email)
+                    {
+                        <button type="submit" class="btn-danger" name="Username" value="@User.Identity.Name" asp-page-handler="DeleteHandler" asp-route-id="@Food.FoodId">Delete</button>
+                        <button type="submit" class="btn-secondary" name="Username" value="@User.Identity.Name" asp-page-handler="UpdateHandler" asp-route-id="@Food.FoodId">Update</button>
+                    }
+                </form>
+            </div>
+        </div>
+    }
+</div>
 
 
 
