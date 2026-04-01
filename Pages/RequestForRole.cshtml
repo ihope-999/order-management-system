@@ -1,20 +1,241 @@
 ﻿@page
 @model project1.Pages.RequestToAdminModel
-@{
 
-
-	<h1>Do you want to become a Courier?</h1>
-	<form method ="post">
-	<button type="submit" name = "role"  role ="Courier" -page-handler ="RoleAssignmentRequest">Request for the role of Courier</button>
-	</form>
-	<h1>Do you want to become an Administrator?</h1>
-	<form method ="post">
-	<button type = "submit" name = "role" value ="Admin"  asp-page-handler ="RoleAssignmentRequest">Request for the role of Admin</button>
-	</form>
-	<form method ="post">
-	<h1>Do you want to become a Seller?</h1>
-	<button type = "submit" name = "role" value ="Seller"  asp-page-handler ="RoleAssignmentRequest">Request for the role of Seller</button>
-	</form>
-
-
+<style>
+.role-request-container {
+    max-width: 900px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-out;
 }
+
+.role-request-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.role-request-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, var(--accent-primary) 0%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.role-request-header p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+.roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.role-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    text-align: center;
+    transition: all var(--transition-base);
+    animation: slideInFromLeft 0.5s ease-out;
+}
+
+.role-card:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+}
+
+.role-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+
+.role-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 1rem 0 0.75rem 0;
+    color: var(--text-primary);
+}
+
+.role-description {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.role-benefits {
+    text-align: left;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+}
+
+.role-benefits h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.role-benefits ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.role-benefits li {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    padding: 0.25rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.role-benefits li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--accent-secondary);
+    font-weight: bold;
+}
+
+.request-button {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    background-color: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.request-button:hover {
+    background-color: var(--accent-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+}
+
+.info-box {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    margin-top: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.info-box strong {
+    color: var(--text-primary);
+}
+
+@@media (max-width: 768px) {
+    .role-request-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .roles-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .role-card {
+        padding: 1.5rem;
+    }
+}
+</style>
+
+<div class="role-request-container">
+    <div class="role-request-header">
+        <h1>Unlock New Opportunities</h1>
+        <p>Request a role upgrade to access exclusive features</p>
+    </div>
+
+    <div class="roles-grid">
+        <!-- Courier Role -->
+        <div class="role-card">
+            <div class="role-icon">🚴</div>
+            <h3 class="role-title">Courier</h3>
+            <p class="role-description">
+                Join our delivery network and earn money by delivering food orders to customers.
+            </p>
+            <div class="role-benefits">
+                <h4>What you'll get:</h4>
+                <ul>
+                    <li>Accept and manage orders</li>
+                    <li>Real-time delivery tracking</li>
+                    <li>Earnings per delivery</li>
+                    <li>Flexible work hours</li>
+                </ul>
+            </div>
+            <form method="post">
+                <button type="submit" class="request-button" name="role" value="Courier" asp-page-handler="RoleAssignmentRequest">
+                    Request Courier Role
+                </button>
+            </form>
+        </div>
+
+        <!-- Seller Role -->
+        <div class="role-card">
+            <div class="role-icon">👨‍🍳</div>
+            <h3 class="role-title">Seller</h3>
+            <p class="role-description">
+                List and sell your delicious food items. Reach customers and grow your food business.
+            </p>
+            <div class="role-benefits">
+                <h4>What you'll get:</h4>
+                <ul>
+                    <li>Add and manage food items</li>
+                    <li>Order management dashboard</li>
+                    <li>Customer ratings & reviews</li>
+                    <li>Sales analytics</li>
+                </ul>
+            </div>
+            <form method="post">
+                <button type="submit" class="request-button" name="role" value="Seller" asp-page-handler="RoleAssignmentRequest">
+                    Request Seller Role
+                </button>
+            </form>
+        </div>
+
+        <!-- Admin Role -->
+        <div class="role-card">
+            <div class="role-icon">👑</div>
+            <h3 class="role-title">Administrator</h3>
+            <p class="role-description">
+                Manage the entire platform. Moderate users, reviews, and ensure service quality.
+            </p>
+            <div class="role-benefits">
+                <h4>What you'll get:</h4>
+                <ul>
+                    <li>User management tools</li>
+                    <li>System analytics</li>
+                    <li>Role assignment</li>
+                    <li>Platform oversight</li>
+                </ul>
+            </div>
+            <form method="post">
+                <button type="submit" class="request-button" name="role" value="Admin" asp-page-handler="RoleAssignmentRequest">
+                    Request Admin Role
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p>
+            <strong>Note:</strong> All role requests require approval from an administrator. 
+            You'll be notified once your request has been processed.
+        </p>
+    </div>
+</div>
