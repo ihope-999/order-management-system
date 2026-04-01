@@ -1,41 +1,274 @@
 ﻿@page
 @model project1.Pages.BuyTheProductsModel
-@{
 
-
-	<form method ="post">
-
-		<label>Enter your Credit Card Number: </label>
-		<input asp-for="PaymentInfo.CreditCardInfo" />
-
-		<label>Select your Payment Processor: </label>
-		<input asp-for ="PaymentInfo.PaymentProcessor"/>
-
-		<label>Tell us your Shipping Address: </label>
-		<input asp-for ="PaymentInfo.ShippingAddress"/>
-		<button type ="submit" asp-page-handler ="BuyTheProducts">Buy the products</button>
-
-		<label>Or do you want to use one of your saved Payment informations?</label>
-		<button type ="submit" asp-page-handler ="ShowPaymentInformations">Show Saved Payment Information</button>
-		<div style="payment-info-section">
-
-			@if (Model.showSavedPaymentInfo)
-			{
-
-				@foreach (var paymentinfo in Model.myUser.PaymentInfo)
-				{
-								<h1>--------------PAYMENT INFO --------------</h1>
-								<button type ="checkbox" asp-for ="specifiedNumber"  asp-page-handler = "BuyTheProductsWithSavedInformation">Use this Payment Info @paymentinfo.paymentInfoId</button>
-								<p1>Your Payment Processor: @paymentinfo.PaymentProcessor</p1>
-								<p1>Your Credit Card Info: @paymentinfo.CreditCardInfo</p1>
-								<p1>Your Saved Address(es): @paymentinfo.ShippingAddress</p1>
-				}
-			}
-	</form>
-	
-
-
-
-	
+<style>
+.payment-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 0;
+    animation: fadeIn 0.5s ease-out;
 }
+
+.payment-header {
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.payment-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--accent-primary) 0%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.payment-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.payment-form-section {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    animation: slideInFromLeft 0.5s ease-out;
+}
+
+.payment-form-section h2 {
+    font-size: 1.25rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+    font-family: var(--font-family);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    background-color: var(--bg-secondary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.payment-button {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    background-color: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    margin-top: 0.5rem;
+}
+
+.payment-button:hover {
+    background-color: var(--accent-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+}
+
+.saved-payments-section {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    animation: slideInFromRight 0.5s ease-out;
+}
+
+.saved-payments-section h2 {
+    font-size: 1.25rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+.divider {
+    text-align: center;
+    margin: 1.5rem 0;
+    color: var(--text-tertiary);
+}
+
+.divider span {
+    padding: 0 1rem;
+    background-color: var(--bg-secondary);
+}
+
+.saved-payment-item {
+    background-color: var(--bg-tertiary);
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-base);
+}
+
+.saved-payment-item:hover {
+    border-color: var(--accent-primary);
+    background-color: var(--bg-hover);
+}
+
+.payment-method-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+
+.payment-detail {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0.4rem 0;
+}
+
+.use-button {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    background-color: var(--accent-secondary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    margin-top: 0.75rem;
+}
+
+.use-button:hover {
+    background-color: #059669;
+    transform: translateY(-1px);
+}
+
+.empty-saved-payments {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+}
+
+.empty-saved-payments-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+@@media (max-width: 1024px) {
+    .payment-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@@media (max-width: 768px) {
+    .payment-header h1 {
+        font-size: 1.75rem;
+    }
+}
+</style>
+
+<div class="payment-container">
+    <div class="payment-header">
+        <h1>Complete Payment</h1>
+        <p style="color: var(--text-secondary);">Choose a payment method to complete your order</p>
+    </div>
+
+    <div class="payment-content">
+        <!-- New Payment Form -->
+        <div class="payment-form-section">
+            <h2>New Payment Method</h2>
+            <form method="post">
+                <div class="form-group">
+                    <label asp-for="PaymentInfo.CreditCardInfo">Credit Card Number</label>
+                    <input asp-for="PaymentInfo.CreditCardInfo" type="text" placeholder="1234 5678 9012 3456" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PaymentInfo.PaymentProcessor">Payment Processor</label>
+                    <input asp-for="PaymentInfo.PaymentProcessor" type="text" placeholder="e.g., Visa, Mastercard, PayPal" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PaymentInfo.ShippingAddress">Shipping Address</label>
+                    <input asp-for="PaymentInfo.ShippingAddress" type="text" placeholder="Full address" />
+                </div>
+
+                <button type="submit" class="payment-button" asp-page-handler="BuyTheProducts">
+                    Pay Now
+                </button>
+            </form>
+
+            <div class="divider"><span>OR</span></div>
+
+            <form method="post">
+                <button type="submit" class="payment-button" style="background-color: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color-light);" 
+                        asp-page-handler="ShowPaymentInformations">
+                    Show Saved Payment Methods
+                </button>
+            </form>
+        </div>
+
+        <!-- Saved Payments Section -->
+        @if (Model.showSavedPaymentInfo && Model.myUser?.PaymentInfo != null && Model.myUser.PaymentInfo.Count > 0)
+        {
+            <div class="saved-payments-section">
+                <h2>Saved Payment Methods</h2>
+                <form method="post">
+                    @foreach (var paymentinfo in Model.myUser.PaymentInfo)
+                    {
+                        <div class="saved-payment-item">
+                            <div class="payment-method-name">@paymentinfo.PaymentProcessor</div>
+                            <div class="payment-detail">
+                                <strong>Card:</strong> ••••••••@(paymentinfo.CreditCardInfo?.Length > 4 ? paymentinfo.CreditCardInfo.Substring(paymentinfo.CreditCardInfo.Length - 4) : "****")
+                            </div>
+                            <div class="payment-detail">
+                                <strong>Address:</strong> @paymentinfo.ShippingAddress
+                            </div>
+                            <button type="submit" class="use-button" 
+                                    name="specifiedNumber" 
+                                    value="@paymentinfo.paymentInfoId"  
+                                    asp-page-handler="BuyTheProductsWithSavedInformation">
+                                Use This Method
+                            </button>
+                        </div>
+                    }
+                </form>
+            </div>
+        }
+        else if (Model.showSavedPaymentInfo)
+        {
+            <div class="saved-payments-section">
+                <h2>Saved Payment Methods</h2>
+                <div class="empty-saved-payments">
+                    <div class="empty-saved-payments-icon">💳</div>
+                    <p>No saved payment methods available</p>
+                    <p style="font-size: 0.9rem;">Add a new payment method using the form on the left</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
 <link rel="stylesheet" href="~/css/buytheproducts.css" asp-append-version="true" />
