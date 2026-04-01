@@ -1,34 +1,287 @@
 ﻿@page
 @model project1.Pages.CheckOrderedItemsModel
-@{
-	
-		<div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: flex-start;">
 
-		
-		@foreach (var cart in Model.Carts)
-		@foreach(var cartItem in cart.Items)
-		{
-						<div style="
-					border: 1px solid #ccc;
-					border-radius: 10px;
-					padding: 15px;
-					box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
-						background-color: #1e1e1e;
-					flex: 0 0 calc(25% - 15px); /* 4 cards per row with gap */
-					box-sizing: border-box;
-						">
-									<p>FoodId: @cartItem.FoodId</p>
-									<p>FoodName: @cartItem.FoodName</p>
-									<p>FoodPrice: @cartItem.FoodPrice</p>
-									<p>Time to make: @cartItem.FoodTimeToMake</p>
-									<p>Deliverer: @cartItem.FoodDeliverer</p>
-									<p>Delivery Address: @cartItem.FoodDeliveryAddress</p>
-									<p>Time to make the delivery: @cartItem.FoodTimeToMakeTheDelivery</p>
-									<p>Status of acceptance: @(cart.Status.IsAcceptedByTheDelivery ? "The delivery accepted your order" : "Still waiting for the delivery to accept your order")</p>
-									<p>Status of payment: @(cart.Status.IsPaid ? "Paid" : "Not Paid")</p>
-								
-				
-						</div>
-		}
-		</div>
+<style>
+.orders-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-out;
 }
+
+.orders-header {
+    margin-bottom: 2rem;
+}
+
+.orders-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.orders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.order-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    transition: all var(--transition-base);
+    animation: slideInFromLeft 0.5s ease-out;
+}
+
+.order-card:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.15);
+}
+
+.order-header {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.order-number {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.food-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.order-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.detail-value {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-accepted {
+    background-color: rgba(16, 185, 129, 0.2);
+    color: #a7f3d0;
+    border: 1px solid var(--accent-secondary);
+}
+
+.status-pending {
+    background-color: rgba(245, 158, 11, 0.2);
+    color: #fcd34d;
+    border: 1px solid var(--accent-warning);
+}
+
+.status-paid {
+    background-color: rgba(16, 185, 129, 0.2);
+    color: #a7f3d0;
+    border: 1px solid var(--accent-secondary);
+}
+
+.status-unpaid {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border: 1px solid var(--accent-danger);
+}
+
+.order-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.empty-orders {
+    text-align: center;
+    padding: 3rem 2rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    color: var(--text-secondary);
+}
+
+.empty-orders h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.empty-orders a {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.75rem 2rem;
+    background-color: var(--accent-primary);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.empty-orders a:hover {
+    background-color: var(--accent-primary-hover);
+    transform: translateY(-2px);
+}
+
+@@media (max-width: 768px) {
+    .orders-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .orders-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .order-footer {
+        flex-direction: column;
+    }
+
+    .order-footer button,
+    .order-footer a {
+        width: 100%;
+        text-align: center;
+    }
+}
+</style>
+
+<div class="orders-container">
+    <div class="orders-header">
+        <h1>Your Orders</h1>
+        <p style="color: var(--text-secondary);">Track the status of your food orders</p>
+    </div>
+
+    @{
+        var hasOrders = Model.Carts != null && Model.Carts.Count > 0;
+        
+        if(hasOrders)
+        {
+            <div class="orders-grid">
+                @foreach (var cart in Model.Carts)
+                {
+                    @foreach(var cartItem in cart.Items)
+                    {
+                        <div class="order-card">
+                            <div class="order-header">
+                                <div class="order-number">Order #@cartItem.FoodId</div>
+                                <h3 class="food-name">@cartItem.FoodName</h3>
+                            </div>
+
+                            <div class="order-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">Price</span>
+                                    <span class="detail-value">$@cartItem.FoodPrice</span>
+                                </div>
+
+                                <div class="detail-row">
+                                    <span class="detail-label">Preparation</span>
+                                    <span class="detail-value">@cartItem.FoodTimeToMake minute(s)</span>
+                                </div>
+
+                                <div class="detail-row">
+                                    <span class="detail-label">Delivery Time</span>
+                                    <span class="detail-value">~@cartItem.FoodTimeToMakeTheDelivery minute(s)</span>
+                                </div>
+
+                                <div class="detail-row">
+                                    <span class="detail-label">Deliverer</span>
+                                    <span class="detail-value">@cartItem.FoodDeliverer</span>
+                                </div>
+
+                                <div class="detail-row">
+                                    <span class="detail-label">Address</span>
+                                    <span class="detail-value" style="font-size: 0.9rem;">@cartItem.FoodDeliveryAddress</span>
+                                </div>
+                            </div>
+
+                            <div class="order-footer">
+                                <div style="width: 100%;">
+                                    <div style="margin-bottom: 0.5rem;">
+                                        <span style="color: var(--text-secondary); font-size: 0.9rem;">Delivery Status:</span>
+                                        <div style="margin-top: 0.4rem;">
+                                            @if(cart.Status.IsAcceptedByTheDelivery)
+                                            {
+                                                <span class="status-badge status-accepted">✓ Accepted</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="status-badge status-pending">⏳ Pending</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="width: 100%;">
+                                    <div>
+                                        <span style="color: var(--text-secondary); font-size: 0.9rem;">Payment Status:</span>
+                                        <div style="margin-top: 0.4rem;">
+                                            @if(cart.Status.IsPaid)
+                                            {
+                                                <span class="status-badge status-paid">✓ Paid</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="status-badge status-unpaid">Unpaid</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-orders">
+                <h2>No Orders Yet</h2>
+                <p>You haven't placed any orders. Start browsing our delicious food options!</p>
+                <a asp-page="/Foods">Browse Foods</a>
+            </div>
+        }
+    }
+</div>
