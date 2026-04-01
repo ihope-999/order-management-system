@@ -1,24 +1,153 @@
 ﻿@page
 @model project1.Pages.RequestForCourierSellerRoleModel
-@{
 
-		@if(Model.role == "Courier"){
-				<h1>You are applying for @Model.role</h1>
-				<h1>Please enter the necessary information below and send it to us.</h1>
-				<input type ="text" placeholder="Introduce yourself to us and please attach your CV" />
-				<form method ="post">
-				<button type = "submit" name = "role" value ="Admin"  asp-page-handler ="CourierRoleAssignmentRequest">Send</button>
-				</form>
-		}
-
-	@if (Model.role == "Seller")
-	{
-		<h1>You are applying for @Model.role</h1>
-		<h1>Please enter the necessary information below and send it to us.</h1>
-		<input type ="text" placeholder="Introduce yourself to us and please attach your CV" />
-		<form method ="post">
-		<button type = "submit" name = "role" value ="Admin"  asp-page-handler ="SellerRoleAssignmentRequest">Send</button>
-		</form>
-	}
-		
+<style>
+.role-request-form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 200px);
+    padding: 2rem;
+    animation: fadeIn 0.5s ease-out;
 }
+
+.role-request-form-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 3rem 2rem;
+    width: 100%;
+    max-width: 550px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.role-request-form-card h1 {
+    text-align: left;
+    font-size: 1.75rem;
+    margin: 0 0 0.5rem 0;
+    color: var(--accent-primary);
+}
+
+.role-icon {
+    display: inline-block;
+    font-size: 2rem;
+    margin-right: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.form-instructions {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.form-group textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 0.875rem 1rem;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+    font-family: var(--font-family);
+    resize: vertical;
+}
+
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    background-color: var(--bg-secondary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.submit-button {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    background-color: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-family: var(--font-family);
+}
+
+.submit-button:hover {
+    background-color: var(--accent-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+}
+
+@@media (max-width: 480px) {
+    .role-request-form-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .role-request-form-card h1 {
+        font-size: 1.5rem;
+    }
+}
+</style>
+
+<div class="role-request-form-container">
+    @if(Model.role == "Courier")
+    {
+        <div class="role-request-form-card">
+            <span class="role-icon">🚴</span>
+            <h1>Courier Application</h1>
+            <p class="form-instructions">
+                We'd love to have you join our delivery team! Please tell us about your experience and why you'd be a great courier.
+            </p>
+
+            <form method="post">
+                <div class="form-group">
+                    <label for="application">Your Application</label>
+                    <textarea id="application" placeholder="Tell us about your delivery experience, vehicle details, availability, and any other relevant information..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-button" name="role" value="Courier" asp-page-handler="CourierRoleAssignmentRequest">
+                    Submit Application
+                </button>
+            </form>
+        </div>
+    }
+
+    @if (Model.role == "Seller")
+    {
+        <div class="role-request-form-card">
+            <span class="role-icon">👨‍🍳</span>
+            <h1>Seller Application</h1>
+            <p class="form-instructions">
+                We're excited to feature your delicious food! Please introduce your restaurant/kitchen and tell us what makes your food special.
+            </p>
+
+            <form method="post">
+                <div class="form-group">
+                    <label for="application">Your Application</label>
+                    <textarea id="application" placeholder="Tell us about your food business, specialties, operating hours, food safety practices, and what you're excited to offer..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-button" name="role" value="Seller" asp-page-handler="SellerRoleAssignmentRequest">
+                    Submit Application
+                </button>
+            </form>
+        </div>
+    }
+</div>
