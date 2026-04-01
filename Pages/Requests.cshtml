@@ -1,15 +1,214 @@
 ﻿@page
 @model project1.Pages.RequestsModel
-@{
-	if(User.IsInRole("Admin")){
-		@foreach(var requestUser in Model.RequestUsers){
-			<p1>Username: @requestUser.RealUserName</p1>
-			<p1>Real Name(First Name ): @requestUser.FirstName</p1>
-			<p1>Wants to be a @requestUser.RoleRequest</p1>
-			<form method ="post">
-			<button type ="submit" asp-route-id = "@requestUser.Id", asp-page-handler = "GiveRole">Give permission</button>
-			</form>
-		}
-	}
+
+<style>
+.requests-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-out;
 }
+
+.requests-header {
+    margin-bottom: 2rem;
+}
+
+.requests-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.requests-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.requests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.request-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    transition: all var(--transition-base);
+    animation: slideInFromLeft 0.5s ease-out;
+}
+
+.request-card:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.15);
+}
+
+.request-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.request-user {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.request-user-info {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.request-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+}
+
+.detail-label {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.role-requested {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    background-color: var(--accent-primary);
+    color: white;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.request-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.approve-btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    background-color: var(--accent-secondary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.approve-btn:hover {
+    background-color: #059669;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.empty-requests {
+    text-align: center;
+    padding: 3rem 2rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    color: var(--text-secondary);
+}
+
+.empty-requests-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.not-authorized {
+    text-align: center;
+    padding: 3rem 2rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--accent-danger);
+    border-radius: var(--radius-lg);
+    color: var(--accent-danger);
+}
+
+@@media (max-width: 768px) {
+    .requests-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .requests-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<div class="requests-container">
+    <div class="requests-header">
+        <h1>Role Requests</h1>
+        <p>Manage user role requests</p>
+    </div>
+
+    @{
+        if(User.IsInRole("Admin"))
+        {
+            if(Model.RequestUsers != null && Model.RequestUsers.Count > 0)
+            {
+                <div class="requests-grid">
+                    @foreach(var requestUser in Model.RequestUsers)
+                    {
+                        <div class="request-card">
+                            <div class="request-header">
+                                <h3 class="request-user">@requestUser.RealUserName</h3>
+                                <p class="request-user-info">ID: @requestUser.Id</p>
+                            </div>
+
+                            <div class="request-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">First Name</span>
+                                    <span style="color: var(--text-primary); font-weight: 600;">@requestUser.FirstName</span>
+                                </div>
+
+                                <div class="detail-item">
+                                    <span class="detail-label">Requested Role</span>
+                                    <span class="role-requested">@requestUser.RoleRequest</span>
+                                </div>
+                            </div>
+
+                            <div class="request-actions">
+                                <form method="post" style="width: 100%;">
+                                    <button type="submit" class="approve-btn" asp-route-id="@requestUser.Id" asp-page-handler="GiveRole">
+                                        ✓ Approve Request
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="empty-requests">
+                    <div class="empty-requests-icon">📭</div>
+                    <h2 style="margin-top: 0;">No Pending Requests</h2>
+                    <p>All role requests have been processed. Check back later.</p>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="not-authorized">
+                <h2 style="margin-top: 0;">Access Denied</h2>
+                <p>You do not have permission to view this page. Admin access required.</p>
+            </div>
+        }
+    }
+</div>
 
