@@ -1,45 +1,187 @@
 ﻿@page
 @model project1.Pages.UpdateFoodModel
-@{
 
-		<div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: flex-start;">
-		
-			<div style="
-					border: 1px solid #ccc;
-					border-radius: 10px;
-					padding: 15px;
-					box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
-					background-color: #f9f9f9;
-					flex: 0 0 calc(25% - 15px); /* 4 cards per row with gap */
-					box-sizing: border-box;
-						">
-
-			<form method ="post">
-				
-			
-				<input type="hidden" asp-for="updateFood.FoodId" />
-
-				<label>Name: </label>
-						<input asp-for ="@Model.updateFood.FoodName" />
-						<label>Price: </label>
-						<input asp-for = "@Model.updateFood.FoodPrice" />
-						<label>Time to Make: </label>
-						<input asp-for = "@Model.updateFood.FoodTimeToMake"/>
-						<label>Deliverer: </label>
-						<input asp-for ="@Model.updateFood.FoodDeliverer"/>
-						<label>Delivery Address: </label>
-						<input asp-for ="@Model.updateFood.FoodDeliveryAddress"/>
-						<label>Time to Make the Delivery: </label>
-						<input asp-for = "@Model.updateFood.FoodTimeToMakeTheDelivery"/>
-
-
-							<button asp-page-handler = "UpdateHandler">Update</button>
-			</form>
-					
-								
-				</div>
-	
-		</div>
+<style>
+.update-food-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem 0;
+    animation: fadeIn 0.5s ease-out;
 }
+
+.update-food-header {
+    margin-bottom: 2rem;
+}
+
+.update-food-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.update-food-form {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+    font-family: var(--font-family);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    background-color: var(--bg-secondary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-row .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.update-button {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    background-color: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-family: var(--font-family);
+}
+
+.update-button:hover {
+    background-color: var(--accent-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+}
+
+.cancel-button {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-family: var(--font-family);
+}
+
+.cancel-button:hover {
+    background-color: var(--bg-hover);
+    border-color: var(--text-secondary);
+    transform: translateY(-2px);
+}
+
+@@media (max-width: 768px) {
+    .update-food-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+}
+</style>
+
+<div class="update-food-container">
+    <div class="update-food-header">
+        <h1>Update Food Item</h1>
+        <p style="color: var(--text-secondary);">Edit the details of your food item</p>
+    </div>
+
+    <div class="update-food-form">
+        <form method="post">
+            <input type="hidden" asp-for="updateFood.FoodId" />
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="updateFood.FoodName">Item Name</label>
+                    <input asp-for="updateFood.FoodName" type="text" placeholder="Food name" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="updateFood.FoodPrice">Price ($)</label>
+                    <input asp-for="updateFood.FoodPrice" type="number" step="0.01" placeholder="Price" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="updateFood.FoodTimeToMake">Prep Time (min)</label>
+                    <input asp-for="updateFood.FoodTimeToMake" type="number" placeholder="Minutes" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="updateFood.FoodDeliverer">Deliverer Name</label>
+                    <input asp-for="updateFood.FoodDeliverer" type="text" placeholder="Deliverer name" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="updateFood.FoodDeliveryAddress">Delivery Address</label>
+                <input asp-for="updateFood.FoodDeliveryAddress" type="text" placeholder="Full delivery address" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="updateFood.FoodTimeToMakeTheDelivery">Delivery Time (min)</label>
+                <input asp-for="updateFood.FoodTimeToMakeTheDelivery" type="number" placeholder="Minutes" />
+            </div>
+
+            <div class="form-buttons">
+                <button type="submit" class="update-button" asp-page-handler="UpdateHandler">
+                    Update Item
+                </button>
+                <a asp-page="/Foods" class="cancel-button" style="text-align: center; line-height: 1; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
 
 		
